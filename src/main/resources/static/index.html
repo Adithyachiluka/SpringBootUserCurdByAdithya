@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>User CRUD</title>
+</head>
+
+<body>
+
+    <h1>User CRUD Operations</h1>
+
+    <input type="number" id="id" placeholder="Enter ID"><br><br>
+
+    <input type="text" id="name" placeholder="Enter Name"><br><br>
+
+    <input type="email" id="email" placeholder="Enter Email"><br><br>
+
+    <input type="password" id="password" placeholder="Enter Password"><br><br>
+
+    <button onclick="saveUser()">Save User</button>
+
+    <button onclick="findUser()">Find User</button>
+
+    <button onclick="updateUser()">Update User</button>
+
+    <button onclick="deleteUser()">Delete User</button>
+
+    <h2 id="result"></h2>
+
+    <script>
+
+        // SAVE USER
+        async function saveUser()
+        {
+            let user =
+            {
+                id: document.getElementById("id").value,
+                name: document.getElementById("name").value,
+                email: document.getElementById("email").value,
+                password: document.getElementById("password").value
+            };
+
+            let response = await fetch("/save",//fetch("http://localhost:8080/save",
+            {
+                method: "POST",
+
+                headers:
+                {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(user)
+            });
+
+            let data = await response.json();
+
+            console.log(data);
+
+            alert("User Saved");
+        }
+
+        // FIND USER
+        async function findUser()
+        {
+            let id = document.getElementById("id").value;
+
+            let response = await fetch("/find?id=" + id)//fetch("http://localhost:8080/find?id=" + id);
+
+            let data = await response.json();
+
+            document.getElementById("name").value = data.name;
+            document.getElementById("email").value = data.email;
+            document.getElementById("password").value = data.password;
+
+            document.getElementById("result").innerHTML =
+                "User Found Successfully";
+        }
+
+        // UPDATE USER
+        async function updateUser()
+        {
+            let user =
+            {
+                id: document.getElementById("id").value,
+                name: document.getElementById("name").value,
+                email: document.getElementById("email").value,
+                password: document.getElementById("password").value
+            };
+
+          //  let response = await fetch("http://localhost:8080/update",
+           // {
+               let response = await fetch("/update",
+    			{  
+        	  method: "PUT",
+
+                headers:
+                {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(user)
+            });
+
+            let data = await response.json();
+
+            console.log(data);
+
+            alert("User Updated");
+        }
+
+        // DELETE USER
+        async function deleteUser()
+        {
+            let id = document.getElementById("id").value;
+
+            //let response = await fetch("http://localhost:8080/delete/" + id,
+            		 let response = await fetch("/delete/" + id,
+            {
+                method: "DELETE"
+            });
+
+            alert("User Deleted");
+
+            document.getElementById("id").value = "";
+            document.getElementById("name").value = "";
+            document.getElementById("email").value = "";
+            document.getElementById("password").value = "";
+        }
+
+    </script>
+
+</body>
+
+</html>
